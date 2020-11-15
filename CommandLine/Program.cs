@@ -16,11 +16,11 @@ namespace CommandLine
 
     [Required]
     [Option(Description = "Game Folder", ShortName = "d")]
-    private string MainGameFolder { get; } = "";
+    private string MainGameFolder { get; }
 
     [Required]
     [Option(Description = "Output Folder", ShortName = "o")]
-    private string OutputFolderPath { get; } = "";
+    private string OutputFolderPath { get; }
 
     public static int Main(string[] args) => CommandLineApplication.Execute<Program>(args);
 
