@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CommandLine": {
+      "commandName": "Project",
+      "commandLineArgs": "4 b \"C:\\Users\\Broderick\\Code\\ao-bin-dumps\" \"C:\\Program Files (x86)\\AlbionOnline\\launcher\\..\""
+    }
+  }
+}
