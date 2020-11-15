@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Extractor.Extractors
 {
-  static class BinaryDecrypter
+  internal static class BinaryDecrypter
   {
     private static readonly byte[] Key = new byte[] { 48, 239, 114, 71, 66, 242, 4, 50 };
     private static readonly byte[] Iv = new byte[] { 14, 166, 220, 137, 219, 237, 220, 79 };

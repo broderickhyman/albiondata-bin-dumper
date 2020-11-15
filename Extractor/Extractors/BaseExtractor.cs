@@ -45,7 +45,7 @@ namespace Extractor.Extractors
     protected readonly ExportType exportType;
     protected readonly ExportMode exportMode;
 
-    public BaseExtractor(string mainGameFolder, string outputFolderPath, ExportMode exportMode, ExportType exportType)
+    protected BaseExtractor(string mainGameFolder, string outputFolderPath, ExportMode exportMode, ExportType exportType)
     {
       this.outputFolderPath = outputFolderPath;
       this.mainGameFolder = mainGameFolder;
@@ -127,7 +127,7 @@ namespace Extractor.Extractors
       var filePathWithoutExtension = Path.Combine(outputFolderPath, "formatted", Path.GetFileNameWithoutExtension(GetBinFilePath()));
       if (!Directory.Exists(Path.GetDirectoryName(filePathWithoutExtension)))
       {
-        var di = Directory.CreateDirectory(Path.GetDirectoryName(filePathWithoutExtension));
+        Directory.CreateDirectory(Path.GetDirectoryName(filePathWithoutExtension));
       }
 
       if (exportType == ExportType.TextList)
