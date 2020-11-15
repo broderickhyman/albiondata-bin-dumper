@@ -1,37 +1,45 @@
 ﻿using Extractor;
 using Extractor.Extractors;
+using McMaster.Extensions.CommandLineUtils;
 using System;
-using System.IO;
+using System.ComponentModel.DataAnnotations;
 
 namespace CommandLine
 {
-  internal static class Program
+  internal class Program
   {
-    private static string outputFolderPath = "";
-    private static ExportType exportType;
-    private static ExportMode exportMode;
-    private static string mainGameFolder = "";
+    [Option(Description = "Export Type", ShortName = "t")]
+    private ExportType ExportType { get; } = ExportType.Both;
 
-    private static void Main(string[] args)
+    [Option(Description = "Export Mode", ShortName = "m")]
+    private ExportMode ExportMode { get; } = ExportMode.Everything;
+
+    [Required]
+    [Option(Description = "Game Folder", ShortName = "d")]
+    private string MainGameFolder { get; } = "";
+
+    [Required]
+    [Option(Description = "Output Folder", ShortName = "o")]
+    private string OutputFolderPath { get; } = "";
+
+    public static int Main(string[] args) => CommandLineApplication.Execute<Program>(args);
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Called with reflection")]
+    private void OnExecute()
     {
-      ParseCommandline(args);
-
       RunExtractions();
-
-      Console.Out.WriteLine("\nPress Any Key to Quit");
-      Console.ReadKey();
     }
 
-    public static void RunExtractions()
+    public void RunExtractions()
     {
       Console.Out.WriteLine("#---- Starting Extraction Operation ----#");
 
       string exportTypeString;
-      if (exportType == ExportType.TextList)
+      if (ExportType == ExportType.TextList)
       {
         exportTypeString = "Text List";
       }
-      else if (exportType == ExportType.Json)
+      else if (ExportType == ExportType.Json)
       {
         exportTypeString = "JSON";
       }
@@ -40,22 +48,18 @@ namespace CommandLine
         exportTypeString = "Text List and JSON";
       }
 
-      var localizationData = new LocalizationData(mainGameFolder, outputFolderPath);
+      var localizationData = new LocalizationData(MainGameFolder, OutputFolderPath);
 
-      switch (exportMode)
+      switch (ExportMode)
       {
-        case ExportMode.Item_Extraction:
+        case ExportMode.ItemExtraction:
           ExtractItems(localizationData, exportTypeString);
           break;
-        case ExportMode.Location_Extraction:
+        case ExportMode.LocationExtraction:
           ExtractLocations(exportTypeString);
           break;
-        case ExportMode.Dump_All_XML:
+        case ExportMode.DumpAllXML:
           DumpAllXml();
-          break;
-        case ExportMode.Extract_Items_Locations:
-          ExtractItems(localizationData, exportTypeString);
-          ExtractLocations(exportTypeString);
           break;
         case ExportMode.Everything:
           ExtractItems(localizationData, exportTypeString);
@@ -66,91 +70,25 @@ namespace CommandLine
       Console.Out.WriteLine("#---- Finished Extraction Operation ----#");
     }
 
-    public static void ExtractItems(LocalizationData localizationData, string exportTypeString)
+    public void ExtractItems(LocalizationData localizationData, string exportTypeString)
     {
       Console.Out.WriteLine("--- Starting Extraction of Items as " + exportTypeString + " ---");
-      new ItemExtractor(mainGameFolder, outputFolderPath, exportMode, exportType).Extract(localizationData);
+      new ItemExtractor(MainGameFolder, OutputFolderPath, ExportMode, ExportType).Extract(localizationData);
       Console.Out.WriteLine("--- Extraction Complete! ---");
     }
 
-    public static void ExtractLocations(string exportTypeString)
+    public void ExtractLocations(string exportTypeString)
     {
       Console.Out.WriteLine("--- Starting Extraction of Locations as " + exportTypeString + " ---");
-      new LocationExtractor(mainGameFolder, outputFolderPath, exportMode, exportType).Extract();
+      new LocationExtractor(MainGameFolder, OutputFolderPath, ExportMode, ExportType).Extract();
       Console.Out.WriteLine("--- Extraction Complete! ---");
     }
 
-    public static void DumpAllXml()
+    public void DumpAllXml()
     {
       Console.Out.WriteLine("--- Starting Extraction of All Files as XML ---");
-      new BinaryDumper().Extract(mainGameFolder, outputFolderPath);
+      new BinaryDumper().Extract(MainGameFolder, OutputFolderPath);
       Console.Out.WriteLine("--- Extraction Complete! ---");
-    }
-
-    private static void PrintHelp()
-    {
-      Console.WriteLine("How to use:\nao-id-extractor.exe modeID outFormat [outFolder]\n" +
-          "modeID\t\t#Extraction 0=Item Extraction, 1=Location Extraction, 2=Dump All, 3=Extract Items & Locations, 4=Everything\n" +
-          "outFormat\t#l=Text List, j=JSON b=Both\n" +
-          "[outFolder]\t#OPTIONAL: Output folder path. Default: current directory\n" +
-          "[gameFolder]\t#OPTIONAL: Location of the main AlbionOnline folder");
-    }
-
-    private static void ParseCommandline(string[] args)
-    {
-      if (args.Length >= 2)
-      {
-        var exportMode = int.Parse(args[0]);
-        if (exportMode >= 0 && exportMode <= 4)
-        {
-          Program.exportMode = (ExportMode)exportMode;
-        }
-        else
-        {
-          PrintHelp();
-          return;
-        }
-
-        if (args[1] == "l" || args[1] == "j" || args[1] == "b")
-        {
-          exportType = ExportType.Both;
-          switch (args[1])
-          {
-            case "l":
-              exportType = ExportType.TextList;
-              break;
-            case "j":
-              exportType = ExportType.Json;
-              break;
-          }
-        }
-        else
-        {
-          PrintHelp();
-          return;
-        }
-
-        if (args.Length >= 3)
-        {
-          if (string.IsNullOrWhiteSpace(args[2]))
-          {
-            outputFolderPath = Directory.GetCurrentDirectory();
-          }
-          else
-          {
-            outputFolderPath = args[2];
-          }
-        }
-
-        if (args.Length == 4)
-        {
-          mainGameFolder = args[3];
-        }
-      }
-      else
-      {
-        PrintHelp();
-      }
     }
   }
 }

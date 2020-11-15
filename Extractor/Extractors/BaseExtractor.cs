@@ -31,10 +31,9 @@ namespace Extractor.Extractors
 
   public enum ExportMode
   {
-    Item_Extraction,
-    Location_Extraction,
-    Dump_All_XML,
-    Extract_Items_Locations,
+    ItemExtraction,
+    LocationExtraction,
+    DumpAllXML,
     Everything
   }
 
