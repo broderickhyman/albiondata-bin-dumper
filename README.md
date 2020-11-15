@@ -1,5 +1,5 @@
 # albiondata-bin-dumper
-This tool allows you to dump the info in the Albion Online ".bin" Files, and export them to a file as a List or JSON. It also extract the ID's and Names of Items and Locations.
+This tool allows you to dump the info in the Albion Online ".bin" Files, convert them to XML/JSON files. It also extract the ID's and Names of Items and Locations.
 
 ## Requirements
 * Visual Studio 2019 (to build)
