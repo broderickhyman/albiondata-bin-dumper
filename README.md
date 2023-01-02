@@ -1,3 +1,7 @@
+# THIS REPO IS ARCHIVED! THE ACTIVE REPO CAN BE FOUND [HERE](https://github.com/ao-data/albiondata-bin-dumper)! (ao-data/albiondata-bin-dumper)
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
+
 # albiondata-bin-dumper
 This tool allows you to dump the info in the Albion Online ".bin" Files, convert them to XML/JSON files. It also extract the ID's and Names of Items and Locations.
 
